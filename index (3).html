@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bullet Journal</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#090909;
+    color:#f5f5f5;
+}
+
+nav{
+    background:#111;
+    border-bottom:1px solid #292929;
+    padding:15px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+}
+
+nav h1{
+    color:#ff8a00;
+    margin-right:20px;
+}
+
+nav button{
+    background:#181818;
+    color:#ddd;
+    border:1px solid #333;
+    padding:9px 14px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+nav button:hover{
+    border-color:#ff8a00;
+    color:#ff8a00;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:25px;
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+h3{
+    margin-bottom:12px;
+    color:#ff9b32;
+}
+
+.card{
+    background:#111;
+    border:1px solid #292929;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+label{
+    display:block;
+    color:#bbb;
+    margin-bottom:6px;
+    font-size:14px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    background:#191919;
+    color:#fff;
+    border:1px solid #383838;
+    border-radius:7px;
+    padding:10px;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    outline:none;
+    border-color:#ff8a00;
+}
+
+button.primary{
+    background:#ff8a00;
+    color:#000;
+    font-weight:bold;
+    border:none;
+    padding:12px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button.primary:hover{
+    background:#ff9b32;
+}
+
+.section-title{
+    border-left:4px solid #ff8a00;
+    padding-left:10px;
+    margin:25px 0 15px;
+}
+
+.checkbox-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:10px;
+}
+
+.checkbox{
+    background:#191919;
+    border:1px solid #303030;
+    border-radius:7px;
+    padding:10px;
+}
+
+.checkbox input{
+    width:auto;
+    margin-right:8px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:15px;
+}
+
+.stat{
+    background:#151515;
+    border:1px solid #292929;
+    border-radius:10px;
+    padding:18px;
+}
+
+.stat-value{
+    font-size:25px;
+    font-weight:bold;
+    color:#ff8a00;
+    margin-top:8px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:11px;
+    border-bottom:1px solid #292929;
+    text-align:left;
+}
+
+th{
+    color:#ff9b32;
+}
+
+tr:hover{
+    background:#171717;
+}
+
+.trade-row{
+    cursor:pointer;
+}
+
+img.preview{
+    max-width:100%;
+    max-height:350px;
+    border-radius:8px;
+    margin-top:10px;
+    border:1px solid #333;
+}
+
+.notice{
+    background:#17130d;
+    border:1px solid #66420e;
+    padding:12px;
+    border-radius:8px;
+    color:#e9c98e;
+    margin-bottom:15px;
+}
+
+.success{
+    background:#0d1b12;
+    border:1px solid #1e6b38;
+    padding:12px;
+    border-radius:8px;
+    color:#8ee0a9;
+}
+
+.danger{
+    color:#ff6565;
+}
+
+.green{
+    color:#63dc8a;
+}
+
+.orange{
+    color:#ff9b32;
+}
+
+.hidden{
+    display:none;
+}
+
+.mistake{
+    border-color:#603131;
+}
+
+.detail-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:12px;
+}
+
+.detail{
+    background:#171717;
+    padding:13px;
+    border-radius:8px;
+}
+
+.detail small{
+    display:block;
+    color:#888;
+    margin-bottom:4px;
+}
+
+.screenshot-box{
+    background:#151515;
+    border:1px dashed #444;
+    padding:15px;
+    border-radius:8px;
+}
+
+@media(max-width:600px){
+    .container{
+        padding:12px;
+    }
+
+    nav h1{
+        width:100%;
+    }
+
+    table{
+        font-size:12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <h1>🎯 Bullet Journal</h1>
+    <button onclick="showPage('dashboard')">📊 Dashboard</button>
+    <button onclick="showPage('add')">➕ Add Trade</button>
+    <button onclick="showPage('history')">📋 Trade History</button>
+    <button onclick="showPage('analytics')">📈 Analytics</button>
+</nav>
+
+<div class="container">
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page">
+
+    <h2>Trading Dashboard</h2>
+
+    <div class="stats">
+
+        <div class="stat">
+            <div>Total Trades</div>
+            <div class="stat-value" id="dashTotal">0</div>
+        </div>
+
+        <div class="stat">
+            <div>Win Rate</div>
+            <div class="stat-value" id="dashWinRate">0%</div>
+        </div>
+
+        <div class="stat">
+            <div>Net R</div>
+            <div class="stat-value" id="dashNetR">0R</div>
+        </div>
+
+        <div class="stat">
+            <div>Average R</div>
+            <div class="stat-value" id="dashAvgR">0R</div>
+        </div>
+
+        <div class="stat">
+            <div>Profit Factor</div>
+            <div class="stat-value" id="dashPF">0</div>
+        </div>
+
+        <div class="stat">
+            <div>Expectancy</div>
+            <div class="stat-value" id="dashExpectancy">0R</div>
+        </div>
+
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h3>Bullet Strike Philosophy</h3>
+        <p>
+            HTF tells where. LTF tells whether allowed.
+        </p>
+        <br>
+        <p>
+            Higher Timeframe Direction →
+            HTF POI →
+            Liquidity →
+            MSS/CHOCH →
+            OB/FVG →
+            Displacement →
+            LTF Entry
+        </p>
+    </div>
+
+</section>
+
+
+<!-- ADD TRADE -->
+<section id="add" class="page hidden">
+
+    <h2>➕ Add Trade</h2>
+
+    <form id="tradeForm">
+
+        <div class="section-title">
+            <h3>Basic Trade Information</h3>
+        </div>
+
+        <div class="grid">
+
+            <div>
+                <label>Instrument</label>
+                <input id="instrument" required placeholder="EURUSD">
+            </div>
+
+            <div>
+                <label>Direction</label>
+                <select id="direction" required>
+                    <option value="">Select</option>
+                    <option>BUY</option>
+                    <option>SELL</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Date</label>
+                <input id="date" type="date" required>
+            </div>
+
+            <div>
+                <label>Session</label>
+                <select id="session">
+                    <option>London</option>
+                    <option>New York</option>
+                    <option>Asian</option>
+                    <option>London/New York</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+        </div>
+
+
+        <div class="section-title">
+            <h3>Trade Prices</h3>
+        </div>
+
+        <div class="grid">
+
+            <div>
+                <label>Entry Price</label>
+                <input id="entry" type="number" step="any" placeholder="1.1700">
+            </div>
+
+            <div>
+                <label>Stop Loss</label>
+                <input id="sl" type="number" step="any" placeholder="1.1680">
+            </div>
+
+            <div>
+                <label>Take Profit</label>
+                <input id="tp" type="number" step="any" placeholder="1.1760">
+            </div>
+
+            <div>
+                <label>Result</label>
+                <select id="result">
+                    <option>WIN</option>
+                    <option>LOSS</option>
+                    <option>BREAKEVEN</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Actual R</label>
+                <input id="actualR" type="number" step="0.01" placeholder="3">
+            </div>
+
+        </div>
+
+
+        <div class="section-title">
+            <h3>Risk & Position Management</h3>
+        </div>
+
+        <div class="grid">
+
+            <div>
+                <label>Risk %</label>
+                <input id="riskPercent" type="number" step="0.01" placeholder="1">
+            </div>
+
+            <div>
+                <label>Lot Size</label>
+                <input id="lotSize" type="number" step="0.01" placeholder="0.10">
+            </div>
+
+            <div>
+                <label>Planned R:R</label>
+                <input id="plannedRR" type="text" placeholder="1:3" readonly>
+            </div>
+
+            <div>
+                <label>Risk Distance</label>
+                <input id="riskDistance" type="text" readonly>
+            </div>
+
+            <div>
+                <label>Reward Distance</label>
+                <input id="rewardDistance" type="text" readonly>
+            </div>
+
+        </div>
+
+        <div class="notice">
+            Planned R:R is calculated automatically from Entry, Stop Loss and Take Profit.
+        </div>
+
+
+        <div class="section-title">
+            <h3>Trade Duration</h3>
+        </div>
+
+        <div class="grid">
+
+            <div>
+                <label>Trade Start</label>
+                <input id="startTime" type="datetime-local">
+            </div>
+
+            <div>
+                <label>Trade End</label>
+                <input id="endTime" type="datetime-local">
+            </div>
+
+            <div>
+                <label>Trade Duration</label>
+                <input id="duration" type="text" readonly placeholder="Automatically calculated">
+            </div>
+
+        </div>
+
+
+        <div class="section-title">
+            <h3>Bullet Strike Setup</h3>
+        </div>
+
+        <div class="grid">
+
+            <div>
+                <label>HTF Direction</label>
+                <select id="htfDirection">
+                    <option>Bullish</option>
+                    <option>Bearish</option>
+                    <option>Neutral</option>
+                </select>
+            </div>
+
+            <div>
+                <label>HTF Timeframe</label>
+                <select id="htfTimeframe">
+                    <option>Monthly</option>
+                    <option>Weekly</option>
+                    <option>Daily</option>
+                    <option>4H</option>
+                    <option>2H</option>
+                    <option>1H</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Entry Timeframe</label>
+                <select id="entryTimeframe">
+                    <option>Daily</option>
+                    <option>4H</option>
+                    <option>1H</option>
+                    <option>15M</option>
+                    <option>5M</option>
+                    <option>1M</option>
+                </select>
+            </div>
+
+            <div>
+                <label>POI</label>
+                <select id="poi">
+                    <option>Order Block</option>
+                    <option>FVG</option>
+                    <option>Supply</option>
+                    <option>Demand</option>
+                    <option>Liquidity</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+        </div>
+
+
+        <div class="section-title">
+            <h3>Setup Conditions</h3>
+        </div>
+
+        <div class="checkbox-grid">
+
+            <label class="checkbox">
+                <input type="checkbox" id="liquidity">
+                Liquidity Taken
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" id="mss">
+                MSS / CHOCH
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" id="ob">
+                Order Block
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" id="fvg">
+                FVG
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" id="displacement">
+                Displacement
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" id="insidePOI">
+                Inside HTF POI
+            </label>
+
+        </div>
+
+
+        <div class="section-title">
+            <h3>🚨 Mistake Tracking</h3>
+        </div>
+
+        <div class="notice">
+            Record mistakes honestly. The purpose is not to judge the trade — it is to discover patterns in your execution.
+        </div>
+
+        <div class="checkbox-grid">
+
+            <label class="checkbox mistake">
+                <input type="checkbox" id="mistakeBeforeMSS">
+                Entered Before MSS
+            </label>
+
+            <label class="checkbox mistake">
+                <input type="checkbox" id="mistakeHTF">
+                Traded Against HTF Direction
+            </label>
+
+            <label class="checkbox mistake">
+                <input type="checkbox" id="mistakeOutsidePOI">
+                Entered Outside HTF POI
+            </label>
+
+            <label class="checkbox mistake">
+                <input type="checkbox" id="mistakeChased">
+                Chased Price
+            </label>
+
+            <label class="checkbox mistake">
+                <input type="checkbox" id="mistakeMovedSL">
+                Moved SL
+            </label>
+
+            <label class="checkbox mistake">
+                <input type="checkbox" id="mistakeOverRisk">
+                Over-Risked
+            </label>
+
+            <label class="checkbox mistake">
+                <input type="checkbox" id="mistakeRevenge">
+                Revenge Trade
+            </label>
+
+            <label class="checkbox mistake">
+                <input type="checkbox" id="mistakeFOMO">
+                FOMO
+            </label>
+
+            <label class="checkbox mistake">
+                <input type="checkbox" id="mistakePlan">
+                Broke Trading Plan
+            </label>
+
+        </div>
+
+        <br>
+
+        <div>
+            <label>Other Mistake / Note</label>
+            <textarea id="otherMistake" placeholder="Describe any other execution mistake..."></textarea>
+        </div>
+
+
+        <div class="section-title">
+            <h3>📸 Trade Screenshots</h3>
+        </div>
+
+        <div class="grid">
+
+            <div class="screenshot-box">
+
+                <label>Before Trade Screenshot</label>
+
+                <input
+                    type="file"
+                    id="beforeScreenshot"
+                    accept="image/*"
+                >
+
+                <div id="beforePreview"></div>
+
+                <br>
+
+                <div class="notice">
+                    Future upgrade: Bullet Journal will read the TradingView screenshot and attempt to detect Entry, SL, TP and direction automatically.
+                </div>
+
+            </div>
+
+
+            <div class="screenshot-box">
+
+                <label>After Trade Screenshot</label>
+
+                <input
+                    type="file"
+                    id="afterScreenshot"
+                    accept="image/*"
+                >
+
+                <div id="afterPreview"></div>
+
+            </div>
+
+        </div>
+
+
+        <div class="section-title">
+            <h3>📝 Journal</h3>
+        </div>
+
+        <div>
+            <label>Why did I take this trade?</label>
+            <textarea id="why"></textarea>
+        </div>
+
+        <br>
+
+        <div>
+            <label>What happened?</label>
+            <textarea id="what"></textarea>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Lesson Learned</label>
+            <textarea id="lesson"></textarea>
+        </div>
+
+        <br>
+
+        <button class="primary" type="submit">
+            💾 SAVE TRADE
+        </button>
+
+    </form>
+
+</section>
+
+
+<!-- HISTORY -->
+<section id="history" class="page hidden">
+
+    <h2>📋 Trade History</h2>
+
+    <div class="card">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Instrument</th>
+                    <th>Direction</th>
+                    <th>Result</th>
+                    <th>Actual R</th>
+                    <th>Risk %</th>
+                    <th>Planned R:R</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+
+            <tbody id="tradeTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- DETAILS -->
+<section id="details" class="page hidden">
+
+    <button onclick="showPage('history')">← Back to History</button>
+
+    <br><br>
+
+    <div id="tradeDetails"></div>
+
+</section>
+
+
+<!-- ANALYTICS -->
+<section id="analytics" class="page hidden">
+
+    <h2>📈 Bullet Strike Analytics</h2>
+
+    <div id="analyticsContent"></div>
+
+</section>
+
+</div>
+
+
+<script>
+
+const STORAGE_KEY = "bulletTrades";
+
+let trades = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+let beforeImage = "";
+let afterImage = "";
+
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+function showPage(page){
+
+    document.querySelectorAll(".page").forEach(p=>{
+        p.classList.add("hidden");
+    });
+
+    document.getElementById(page).classList.remove("hidden");
+
+    if(page === "dashboard") updateDashboard();
+    if(page === "history") renderHistory();
+    if(page === "analytics") renderAnalytics();
+}
+
+
+/* =========================
+   DEFAULT DATE
+========================= */
+
+document.getElementById("date").value =
+    new Date().toISOString().split("T")[0];
+
+
+/* =========================
+   SCREENSHOT PREVIEW
+========================= */
+
+function readImage(input, callback){
+
+    const file = input.files[0];
+
+    if(!file){
+        callback("");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+        callback(e.target.result);
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+document.getElementById("beforeScreenshot")
+.addEventListener("change", function(){
+
+    readImage(this, function(data){
+
+        beforeImage = data;
+
+        document.getElementById("beforePreview").innerHTML =
+            data
+            ? `<img class="preview" src="${data}">`
+            : "";
+
+    });
+
+});
+
+
+document.getElementById("afterScreenshot")
+.addEventListener("change", function(){
+
+    readImage(this, function(data){
+
+        afterImage = data;
+
+        document.getElementById("afterPreview").innerHTML =
+            data
+            ? `<img class="preview" src="${data}">`
+            : "";
+
+    });
+
+});
+
+
+/* =========================
+   PLANNED R:R
+========================= */
+
+function calculateRR(){
+
+    const entry = parseFloat(document.getElementById("entry").value);
+    const sl = parseFloat(document.getElementById("sl").value);
+    const tp = parseFloat(document.getElementById("tp").value);
+    const direction = document.getElementById("direction").value;
+
+    if(
+        !Number.isFinite(entry) ||
+        !Number.isFinite(sl) ||
+        !Number.isFinite(tp)
+    ){
+        return;
+    }
+
+    let risk;
+    let reward;
+
+    if(direction === "SELL"){
+
+        risk = Math.abs(sl - entry);
+        reward = Math.abs(entry - tp);
+
+    }else{
+
+        risk = Math.abs(entry - sl);
+        reward = Math.abs(tp - entry);
+
+    }
+
+    document.getElementById("riskDistance").value =
+        risk.toFixed(5);
+
+    document.getElementById("rewardDistance").value =
+        reward.toFixed(5);
+
+    if(risk > 0){
+
+        const ratio = reward / risk;
+
+        document.getElementById("plannedRR").value =
+            "1:" + ratio.toFixed(2);
+
+    }
+
+}
+
+
+["entry","sl","tp","direction"].forEach(id=>{
+
+    document.getElementById(id)
+    .addEventListener("input", calculateRR);
+
+});
+
+
+/* =========================
+   TRADE DURATION
+========================= */
+
+function calculateDuration(){
+
+    const start =
+        new Date(document.getElementById("startTime").value);
+
+    const end =
+        new Date(document.getElementById("endTime").value);
+
+    if(
+        isNaN(start.getTime()) ||
+        isNaN(end.getTime()) ||
+        end < start
+    ){
+        document.getElementById("duration").value = "";
+        return;
+    }
+
+    const minutes =
+        Math.round((end - start) / 60000);
+
+    const hours =
+        Math.floor(minutes / 60);
+
+    const mins =
+        minutes % 60;
+
+    let result = "";
+
+    if(hours > 0)
+        result += hours + "h ";
+
+    result += mins + "m";
+
+    document.getElementById("duration").value =
+        result;
+
+}
+
+
+["startTime","endTime"].forEach(id=>{
+
+    document.getElementById(id)
+    .addEventListener("input", calculateDuration);
+
+});
+
+
+/* =========================
+   SAVE TRADE
+========================= */
+
+document.getElementById("tradeForm")
+.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    calculateRR();
+    calculateDuration();
+
+    const trade = {
+
+        id: Date.now(),
+
+        instrument:
+            document.getElementById("instrument").value.trim(),
+
+        direction:
+            document.getElementById("direction").value,
+
+        date:
+            document.getElementById("date").value,
+
+        session:
+            document.getElementById("session").value,
+
+        entry:
+            document.getElementById("entry").value,
+
+        sl:
+            document.getElementById("sl").value,
+
+        tp:
+            document.getElementById("tp").value,
+
+        result:
+            document.getElementById("result").value,
+
+        actualR:
+            parseFloat(document.getElementById("actualR").value) || 0,
+
+        riskPercent:
+            parseFloat(document.getElementById("riskPercent").value) || 0,
+
+        lotSize:
+            parseFloat(document.getElementById("lotSize").value) || 0,
+
+        plannedRR:
+            document.getElementById("plannedRR").value,
+
+        riskDistance:
+            document.getElementById("riskDistance").value,
+
+        rewardDistance:
+            document.getElementById("rewardDistance").value,
+
+        startTime:
+            document.getElementById("startTime").value,
+
+        endTime:
+            document.getElementById("endTime").value,
+
+        duration:
+            document.getElementById("duration").value,
+
+        htfDirection:
+            document.getElementById("htfDirection").value,
+
+        htfTimeframe:
+            document.getElementById("htfTimeframe").value,
+
+        entryTimeframe:
+            document.getElementById("entryTimeframe").value,
+
+        poi:
+            document.getElementById("poi").value,
+
+        conditions:{
+
+            liquidity:
+                document.getElementById("liquidity").checked,
+
+            mss:
+                document.getElementById("mss").checked,
+
+            ob:
+                document.getElementById("ob").checked,
+
+            fvg:
+                document.getElementById("fvg").checked,
+
+            displacement:
+                document.getElementById("displacement").checked,
+
+            insidePOI:
+                document.getElementById("insidePOI").checked
+
+        },
+
+        mistakes:{
+
+            beforeMSS:
+                document.getElementById("mistakeBeforeMSS").checked,
+
+            againstHTF:
+                document.getElementById("mistakeHTF").checked,
+
+            outsidePOI:
+                document.getElementById("mistakeOutsidePOI").checked,
+
+            chased:
+                document.getElementById("mistakeChased").checked,
+
+            movedSL:
+                document.getElementById("mistakeMovedSL").checked,
+
+            overRisk:
+                document.getElementById("mistakeOverRisk").checked,
+
+            revenge:
+                document.getElementById("mistakeRevenge").checked,
+
+            fomo:
+                document.getElementById("mistakeFOMO").checked,
+
+            brokePlan:
+                document.getElementById("mistakePlan").checked,
+
+            other:
+                document.getElementById("otherMistake").value
+
+        },
+
+        screenshots:{
+
+            before:beforeImage,
+            after:afterImage
+
+        },
+
+        journal:{
+
+            why:
+                document.getElementById("why").value,
+
+            what:
+                document.getElementById("what").value,
+
+            lesson:
+                document.getElementById("lesson").value
+
+        },
+
+        createdAt:
+            new Date().toISOString()
+
+    };
+
+
+    trades.push(trade);
+
+    try{
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(trades)
+        );
+
+    }catch(error){
+
+        alert(
+            "The trade could not be saved because browser storage is full. Large screenshots may cause this. OneDrive storage will solve this in the next cloud-storage version."
+        );
+
+        return;
+    }
+
+
+    alert("Trade saved successfully! 🎯");
+
+    this.reset();
+
+    beforeImage = "";
+    afterImage = "";
+
+    document.getElementById("beforePreview").innerHTML = "";
+    document.getElementById("afterPreview").innerHTML = "";
+    document.getElementById("plannedRR").value = "";
+    document.getElementById("riskDistance").value = "";
+    document.getElementById("rewardDistance").value = "";
+    document.getElementById("duration").value = "";
+
+    document.getElementById("date").value =
+        new Date().toISOString().split("T")[0];
+
+    showPage("history");
+
+});
+
+
+/* =========================
+   HISTORY
+========================= */
+
+function renderHistory(){
+
+    const tbody =
+        document.getElementById("tradeTable");
+
+    tbody.innerHTML = "";
+
+    if(trades.length === 0){
+
+        tbody.innerHTML =
+            `<tr><td colspan="8">No trades recorded yet.</td></tr>`;
+
+        return;
+    }
+
+
+    [...trades]
+    .sort((a,b)=>b.id-a.id)
+    .forEach(trade=>{
+
+        const tr =
+            document.createElement("tr");
+
+        tr.className = "trade-row";
+
+        tr.innerHTML = `
+
+            <td>${trade.date || "-"}</td>
+
+            <td>${trade.instrument || "-"}</td>
+
+            <td>${trade.direction || "-"}</td>
+
+            <td class="${trade.result === "WIN" ? "green" : trade.result === "LOSS" ? "danger" : "orange"}">
+                ${trade.result || "-"}
+            </td>
+
+            <td>${Number(trade.actualR || 0).toFixed(2)}R</td>
+
+            <td>${trade.riskPercent || 0}%</td>
+
+            <td>${trade.plannedRR || "-"}</td>
+
+            <td>${trade.duration || "-"}</td>
+
+        `;
+
+        tr.onclick = () =>
+            showTradeDetails(trade.id);
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
+
+/* =========================
+   TRADE DETAILS
+========================= */
+
+function showTradeDetails(id){
+
+    const trade =
+        trades.find(t=>t.id === id);
+
+    if(!trade) return;
+
+    const c =
+        trade.conditions || {};
+
+    const m =
+        trade.mistakes || {};
+
+    const mistakes = [];
+
+    if(m.beforeMSS) mistakes.push("Entered Before MSS");
+    if(m.againstHTF) mistakes.push("Traded Against HTF Direction");
+    if(m.outsidePOI) mistakes.push("Entered Outside HTF POI");
+    if(m.chased) mistakes.push("Chased Price");
+    if(m.movedSL) mistakes.push("Moved SL");
+    if(m.overRisk) mistakes.push("Over-Risked");
+    if(m.revenge) mistakes.push("Revenge Trade");
+    if(m.fomo) mistakes.push("FOMO");
+    if(m.brokePlan) mistakes.push("Broke Trading Plan");
+
+    if(m.other)
+        mistakes.push(m.other);
+
+
+    const mistakeHTML =
+        mistakes.length
+        ? mistakes.map(x=>`<li>${x}</li>`).join("")
+        : "<li>No mistakes recorded.</li>";
+
+
+    document.getElementById("tradeDetails").innerHTML = `
+
+        <h2>${trade.instrument} — ${trade.direction}</h2>
+
+        <div class="card">
+
+            <div class="detail-grid">
+
+                <div class="detail">
+                    <small>Date</small>
+                    ${trade.date || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>Session</small>
+                    ${trade.session || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>Result</small>
+                    ${trade.result || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>Actual R</small>
+                    ${trade.actualR || 0}R
+                </div>
+
+                <div class="detail">
+                    <small>Risk</small>
+                    ${trade.riskPercent || 0}%
+                </div>
+
+                <div class="detail">
+                    <small>Lot Size</small>
+                    ${trade.lotSize || 0}
+                </div>
+
+                <div class="detail">
+                    <small>Planned R:R</small>
+                    ${trade.plannedRR || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>Duration</small>
+                    ${trade.duration || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>Entry</small>
+                    ${trade.entry || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>Stop Loss</small>
+                    ${trade.sl || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>Take Profit</small>
+                    ${trade.tp || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>HTF Direction</small>
+                    ${trade.htfDirection || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>HTF Timeframe</small>
+                    ${trade.htfTimeframe || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>Entry Timeframe</small>
+                    ${trade.entryTimeframe || "-"}
+                </div>
+
+                <div class="detail">
+                    <small>POI</small>
+                    ${trade.poi || "-"}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Bullet Strike Conditions</h3>
+
+            <div class="detail-grid">
+
+                <div class="detail">
+                    Liquidity: ${c.liquidity ? "✅" : "❌"}
+                </div>
+
+                <div class="detail">
+                    MSS/CHOCH: ${c.mss ? "✅" : "❌"}
+                </div>
+
+                <div class="detail">
+                    Order Block: ${c.ob ? "✅" : "❌"}
+                </div>
+
+                <div class="detail">
+                    FVG: ${c.fvg ? "✅" : "❌"}
+                </div>
+
+                <div class="detail">
+                    Displacement: ${c.displacement ? "✅" : "❌"}
+                </div>
+
+                <div class="detail">
+                    Inside HTF POI: ${c.insidePOI ? "✅" : "❌"}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3> Mistake Tracking</h3>
+
+            <ul>
+                ${mistakeHTML}
+            </ul>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3> Before Trade</h3>
+
+            ${
+                trade.screenshots?.before
+                ? `<img class="preview" src="${trade.screenshots.before}">`
+                : "<p>No screenshot uploaded.</p>"
+            }
+
+        </div>
+
+
+        <div class="card">
+
+            <h3> After Trade</h3>
+
+            ${
+                trade.screenshots?.after
+                ? `<img class="preview" src="${trade.screenshots.after}">`
+                : "<p>No screenshot uploaded.</p>"
+            }
+
+        </div>
+
+
+        <div class="card">
+
+            <h3> Journal</h3>
+
+            <h4>Why did I take this trade?</h4>
+            <p>${trade.journal?.why || "-"}</p>
+
+            <br>
+
+            <h4>What happened?</h4>
+            <p>${trade.journal?.what || "-"}</p>
+
+            <br>
+
+            <h4>Lesson Learned</h4>
+            <p>${trade.journal?.lesson || "-"}</p>
+
+        </div>
+
+    `;
+
+    showPage("details");
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function updateDashboard(){
+
+    const total =
+        trades.length;
+
+    const wins =
+        trades.filter(t=>t.result==="WIN").length;
+
+    const losses =
+        trades.filter(t=>t.result==="LOSS").length;
+
+    const winRate =
+        total ? (wins / total) * 100 : 0;
+
+    const netR =
+        trades.reduce(
+            (sum,t)=>sum + Number(t.actualR || 0),
+            0
+        );
+
+    const avgR =
+        total ? netR / total : 0;
+
+    const grossProfit =
+        trades
+        .filter(t=>Number(t.actualR || 0)>0)
+        .reduce((s,t)=>s+Number(t.actualR),0);
+
+    const grossLoss =
+        Math.abs(
+            trades
+            .filter(t=>Number(t.actualR || 0)<0)
+            .reduce((s,t)=>s+Number(t.actualR),0)
+        );
+
+    const pf =
+        grossLoss > 0
+        ? grossProfit / grossLoss
+        : grossProfit > 0
+        ? Infinity
+        : 0;
+
+    const expectancy =
+        avgR;
+
+
+    document.getElementById("dashTotal").textContent =
+        total;
+
+    document.getElementById("dashWinRate").textContent =
+        winRate.toFixed(1) + "%";
+
+    document.getElementById("dashNetR").textContent =
+        netR.toFixed(2) + "R";
+
+    document.getElementById("dashAvgR").textContent =
+        avgR.toFixed(2) + "R";
+
+    document.getElementById("dashPF").textContent =
+        pf === Infinity ? "∞" : pf.toFixed(2);
+
+    document.getElementById("dashExpectancy").textContent =
+        expectancy.toFixed(2) + "R";
+
+}
+
+
+/* =========================
+   ANALYTICS
+========================= */
+
+function conditionStats(condition){
+
+    const valid =
+        trades.filter(t=>t.conditions);
+
+    const withCondition =
+        valid.filter(
+            t=>t.conditions[condition]
+        );
+
+    const wins =
+        withCondition.filter(
+            t=>t.result==="WIN"
+        ).length;
+
+    const winRate =
+        withCondition.length
+        ? (wins / withCondition.length)*100
+        : 0;
+
+    const netR =
+        withCondition.reduce(
+            (s,t)=>s+Number(t.actualR||0),
+            0
+        );
+
+    return {
+        trades:withCondition.length,
+        winRate,
+        netR
+    };
+}
+
+
+function renderAnalytics(){
+
+    const total =
+        trades.length;
+
+    const wins =
+        trades.filter(t=>t.result==="WIN").length;
+
+    const losses =
+        trades.filter(t=>t.result==="LOSS").length;
+
+    const breakeven =
+        trades.filter(t=>t.result==="BREAKEVEN").length;
+
+
+    const allConditions =
+        trades.filter(t=>{
+
+            const c = t.conditions || {};
+
+            return (
+                c.liquidity &&
+                c.mss &&
+                c.ob &&
+                c.fvg &&
+                c.displacement &&
+                c.insidePOI
+            );
+
+        });
+
+
+    const mistakes = {
+
+        "Entered Before MSS":
+            trades.filter(t=>t.mistakes?.beforeMSS),
+
+        "Against HTF":
+            trades.filter(t=>t.mistakes?.againstHTF),
+
+        "Outside HTF POI":
+            trades.filter(t=>t.mistakes?.outsidePOI),
+
+        "Chased Price":
+            trades.filter(t=>t.mistakes?.chased),
+
+        "Moved SL":
+            trades.filter(t=>t.mistakes?.movedSL),
+
+        "Over-Risked":
+            trades.filter(t=>t.mistakes?.overRisk),
+
+        "Revenge Trade":
+            trades.filter(t=>t.mistakes?.revenge),
+
+        "FOMO":
+            trades.filter(t=>t.mistakes?.fomo),
+
+        "Broke Plan":
+            trades.filter(t=>t.mistakes?.brokePlan)
+
+    };
+
+
+    let html = `
+
+        <div class="stats">
+
+            <div class="stat">
+                Total Trades
+                <div class="stat-value">${total}</div>
+            </div>
+
+            <div class="stat">
+                Wins
+                <div class="stat-value">${wins}</div>
+            </div>
+
+            <div class="stat">
+                Losses
+                <div class="stat-value">${losses}</div>
+            </div>
+
+            <div class="stat">
+                Breakeven
+                <div class="stat-value">${breakeven}</div>
+            </div>
+
+            <div class="stat">
+                Full Bullet Strike Setups
+                <div class="stat-value">${allConditions.length}</div>
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Bullet Strike Condition Performance</h3>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Condition</th>
+                        <th>Trades</th>
+                        <th>Win Rate</th>
+                        <th>Net R</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+    `;
+
+
+    const conditionNames = {
+
+        liquidity:"Liquidity Taken",
+        mss:"MSS / CHOCH",
+        ob:"Order Block",
+        fvg:"FVG",
+        displacement:"Displacement",
+        insidePOI:"Inside HTF POI"
+
+    };
+
+
+    Object.keys(conditionNames).forEach(key=>{
+
+        const s =
+            conditionStats(key);
+
+        html += `
+
+            <tr>
+
+                <td>${conditionNames[key]}</td>
+
+                <td>${s.trades}</td>
+
+                <td>${s.winRate.toFixed(1)}%</td>
+
+                <td>${s.netR.toFixed(2)}R</td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Complete Bullet Strike Setup</h3>
+
+            <p>
+                Trades where all six recorded conditions were present:
+            </p>
+
+            <br>
+
+            <div class="stats">
+
+                <div class="stat">
+                    Trades
+                    <div class="stat-value">
+                        ${allConditions.length}
+                    </div>
+                </div>
+
+                <div class="stat">
+                    Win Rate
+                    <div class="stat-value">
+                        ${
+                            allConditions.length
+                            ? (
+                                allConditions.filter(
+                                    t=>t.result==="WIN"
+                                ).length /
+                                allConditions.length *
+                                100
+                            ).toFixed(1)
+                            : 0
+                        }%
+                    </div>
+                </div>
+
+                <div class="stat">
+                    Net R
+                    <div class="stat-value">
+                        ${
+                            allConditions.reduce(
+                                (s,t)=>s+Number(t.actualR||0),
+                                0
+                            ).toFixed(2)
+                        }R
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3> Mistake Analysis</h3>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Mistake</th>
+                        <th>Occurrences</th>
+                        <th>Net R</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+    `;
+
+
+    Object.entries(mistakes).forEach(([name,list])=>{
+
+        const net =
+            list.reduce(
+                (s,t)=>s+Number(t.actualR||0),
+                0
+            );
+
+        html += `
+
+            <tr>
+
+                <td>${name}</td>
+
+                <td>${list.length}</td>
+
+                <td>${net.toFixed(2)}R</td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3> Data-Based Recommendations</h3>
+
+            ${
+                total < 10
+                ? `
+                    <div class="notice">
+                        Record at least 10 trades before drawing strong conclusions from the analytics.
+                        More trades will make the statistics more useful.
+                    </div>
+                  `
+                : `
+                    <p>
+                        Your recommendations are generated from your recorded trading data.
+                        They are observations about your journal, not predictions of future trades.
+                    </p>
+                  `
+            }
+
+        </div>
+
+    `;
+
+
+    document.getElementById("analyticsContent").innerHTML =
+        html;
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+updateDashboard();
+
+showPage("dashboard");
+
+</script>
+
+</body>
+</html>
